@@ -1,8 +1,12 @@
-Errors = {
-    // Local (client-only) collection
-    collection: new Mongo.Collection(null),
-    
-    throw: function(message) {
-	Errors.collection.insert({message: message, seen: false});
+Template.meteorErrors.helpers({
+    errors: function() {
+	return Errors.collection.find();
     }
-};
+});
+
+Template.meteorError.onRendered(function() {
+    var error = this.data;
+    Meteor.setTimeout(function () {
+	Errors.collection.remove(error._id);
+    }, 3000);
+});
